@@ -7,13 +7,6 @@ def load_line(line_number):
     return list(int_map)
 
 
-def generate_empty_row():
-    empty = []
-    for i in range(0, 101):
-        empty.append(0)
-    return empty
-
-
 def sum_two_lines(bot_line, top_line):
     sum_line = []
     for i in range(0, len(top_line)):
@@ -26,8 +19,11 @@ def sum_two_lines(bot_line, top_line):
     return sum_line
 
 
-max_value = sum_two_lines(generate_empty_row(), load_line(100))
-for i in range(99, 0, -1):
-    max_value = sum_two_lines(max_value, load_line(i))
-print(max_value)
+def count_max():
+    max_value = load_line(100)
+    for i in range(99, 0, -1):
+        max_value = sum_two_lines(max_value, load_line(i))
+    return max_value
 
+
+print(count_max())
