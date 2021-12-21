@@ -47,36 +47,53 @@ def check_primes_pair(first, second):
         return False
 
 
-def extend_list(n):
-    temporary = options.copy()
-    options.clear()
-    for i in range(primes.index(primes[n + 1]), len(primes)):
+def get_first_pairs(chain):
+    primes_matching_pairs = []
+    for i in range(1, len(chain) >> 1):
+        first = chain[i]
+        for j in range(primes.index(first) + 1, len(chain)):
+            second = chain[j]
+            if check_primes_pair(first, second):
+                primes_matching_pairs.append([first, second])
+    return primes_matching_pairs
+
+
+def extend_list(chain, n):
+    temporary = chain.copy()
+    for i in range(primes.index(temporary[n][1]), len(primes)):
         temporary.append(primes[i])
         combinations = list(itertools.permutations(temporary, 2))
-        counter = 0
         for j in range(0, len(combinations)):
-            if check_primes_pair(combinations[j][0], combinations[j][1]):
-                counter = counter + 1
-            else:
+            if not check_primes_pair(combinations[j][0], combinations[j][1]):
                 temporary.pop()
                 break
-        if counter == len(combinations):
-            copy_array = temporary.copy()
-            options.append(copy_array)
-            temporary.pop()
+    return temporary
 
 
+def extend_list_short(chain):
+    extended_list = []
+    for i in range(0, len(chain)):
+        temporary = chain[i].copy()
+        for j in range(primes.index(temporary[1]) + 1, len(primes)):
+            third = primes[j]
+            temporary.append(third)
+            combinations = list(itertools.permutations(temporary, 2))
+            counter = 0
+            for k in range(0, len(combinations)):
+
+                if not check_primes_pair(combinations[k][0], combinations[k][1]):
+                    temporary.pop()
+                    break
+                else:
+                    counter = counter + 1
+            if counter == len(combinations):
+                extended_list.append(temporary.copy())
+                temporary.pop()
+    return extended_list
 
 
-#
-# def find_next_in_order():
-#     for i in range(0, len(primes)):
-#         numbers_in_order = len(order)
-#         extend_list(primes[i])
-#         if len(order) != numbers_in_order:
-#             break
-
-options = [7, 1237, 2341]
-primes = erotosthenes_sieve(30000)
-extend_list(1)
-print(options)
+small_primes = erotosthenes_sieve(500)
+primes = erotosthenes_sieve(2000)
+first_pairs = get_first_pairs(small_primes)
+extended = extend_list_short(first_pairs)
+print(extended)
