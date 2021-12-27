@@ -73,6 +73,7 @@ def extend_list(chain, n):
 def extend_list_short(chain):
     extended_list = []
     for i in range(0, len(chain)):
+        temporary = list()
         temporary = chain[i].copy()
         for j in range(primes.index(temporary[1]) + 1, len(primes)):
             third = primes[j]
@@ -92,8 +93,12 @@ def extend_list_short(chain):
     return extended_list
 
 
-small_primes = erotosthenes_sieve(500)
-primes = erotosthenes_sieve(2000)
-first_pairs = get_first_pairs(small_primes)
+small_primes = erotosthenes_sieve(100)
+primes = erotosthenes_sieve(10000)
+first_pairs = get_first_pairs(primes)
 extended = extend_list_short(first_pairs)
+extended2 = extend_list_short(extended)
+extended3 = extend_list_short(extended2)
 print(extended)
+print(extended2)
+print(extended3)
