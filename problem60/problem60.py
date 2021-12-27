@@ -1,5 +1,3 @@
-import itertools
-import math
 import random
 
 
@@ -16,7 +14,7 @@ def erotosthenes_sieve(upper_limit):
     for i in range(2, upper_limit):
         if argument[i]:
             temporary_primes.append(i)
-            for j in range(i * i, upper_limit, i):
+            for j in range(pow(i, 2), upper_limit, i):
                 argument[j] = False
     return temporary_primes
 
@@ -58,47 +56,27 @@ def get_first_pairs(chain):
     return primes_matching_pairs
 
 
-def extend_list(chain, n):
-    temporary = chain.copy()
-    for i in range(primes.index(temporary[n][1]), len(primes)):
-        temporary.append(primes[i])
-        combinations = list(itertools.permutations(temporary, 2))
-        for j in range(0, len(combinations)):
-            if not check_primes_pair(combinations[j][0], combinations[j][1]):
-                temporary.pop()
-                break
-    return temporary
-
-
-def extend_list_short(chain):
-    extended_list = []
+def extend_list(chain):
+    results = []
     for i in range(0, len(chain)):
-        temporary = list()
         temporary = chain[i].copy()
-        for j in range(primes.index(temporary[1]) + 1, len(primes)):
+        for j in range(primes.index(temporary[-1]) + 1, len(primes)):
             third = primes[j]
-            temporary.append(third)
-            combinations = list(itertools.permutations(temporary, 2))
             counter = 0
-            for k in range(0, len(combinations)):
-
-                if not check_primes_pair(combinations[k][0], combinations[k][1]):
-                    temporary.pop()
-                    break
-                else:
+            for k in range(0, len(temporary)):
+                if check_primes_pair(temporary[k], third):
                     counter = counter + 1
-            if counter == len(combinations):
-                extended_list.append(temporary.copy())
-                temporary.pop()
-    return extended_list
+                else:
+                    break
+            if counter == len(temporary):
+                temporary.append(third)
+                if counter == 4:
+                    sum_value = sum(temporary)
+                    results.append(sum_value)
+    return results
 
 
-small_primes = erotosthenes_sieve(100)
 primes = erotosthenes_sieve(10000)
 first_pairs = get_first_pairs(primes)
-extended = extend_list_short(first_pairs)
-extended2 = extend_list_short(extended)
-extended3 = extend_list_short(extended2)
+extended = extend_list(first_pairs)
 print(extended)
-print(extended2)
-print(extended3)
