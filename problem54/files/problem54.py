@@ -46,7 +46,7 @@ def straight_flush(game):
 
 def s_f_w(p1, p2):
     if straight_flush(p1) and straight_flush(p2):
-        return single_k_w(p1, p2)
+        return s_c_w(p1, p2)
     elif royal_flush(p1):
         return 1
     else:
@@ -62,7 +62,7 @@ def four_of_a_kind(game):
 
 def f_w(p1, p2):
     if four_of_a_kind(p1) and four_of_a_kind(p2):
-        return single_k_w(p1, p2)
+        return s_c_w(p1, p2)
     elif four_of_a_kind(p1):
         return 1
     else:
@@ -83,7 +83,7 @@ def color(game):
 
 def c_w(p1, p2):
     if color(p1) and color(p2):
-        return single_k_w(p1, p2)
+        return s_c_w(p1, p2)
     elif color(p1):
         return 1
     else:
@@ -99,7 +99,7 @@ def full_house(game):
 
 def f_h_w(p1, p2):
     if full_house(p1) and full_house(p2):
-        return single_v_w(p1, p2)
+        return s_c_w(p1, p2)
     elif full_house(p1):
         return 1
     else:
@@ -122,7 +122,7 @@ def straight(game):
 
 def s_w(p1, p2):
     if straight(p1) and straight(p2):
-        return single_k_w(p1, p2)
+        return s_c_w(p1, p2)
     elif straight(p1):
         return 1
     else:
@@ -138,7 +138,7 @@ def three_of_kind(game):
 
 def t_w(p1, p2):
     if three_of_kind(p1) and three_of_kind(p2):
-        return single_k_w(p1, p2)
+        return s_c_w(p1, p2)
     elif three_of_kind(p1):
         return 1
     else:
@@ -154,7 +154,7 @@ def two_pairs(game):
 
 def t_p_w(p1, p2):
     if two_pairs(p1) and two_pairs(p2):
-        return single_v_w(p1, p2)
+        return s_c_w(p1, p2)
     elif two_pairs(p1):
         return 1
     else:
@@ -170,42 +170,28 @@ def pair(game):
 
 def p_w(p1, p2):
     if pair(p1) and pair(p2):
-        return single_k_w(p1, p2)
+        return s_c_w(p1, p2)
     elif pair(p1):
         return 1
     else:
         return 2
 
 
-def single_key(game, position):
-    return sorted(check_figures(game).keys())[position]
-
-
-def single_k_w(p1, p2):
-    for i in range(-1, -5, -1):
-        if single_key(p1, i) < single_key(p2, i):
-            return 2
-        elif single_key(p1, i) > single_key(p2, i):
-            return 1
-    return 0
-
-
-def single_value(game, position):
-    x = sorted(check_figures(game).items(), key=lambda x: [1])
-    x.reverse()
+def one_card(game, position):
+    x = sorted(check_figures(game).items(), key=lambda kv:(kv[1], kv[0]))
     return x[position][0]
 
 
-def single_v_w(p1, p2):
+def s_c_w(p1, p2):
     for i in range(-1, -5, -1):
-        if single_value(p1, i) < single_value(p2, i):
+        if one_card(p1, i) < one_card(p2, i):
             return 2
-        elif single_value(p1, i) > single_value(p2, i):
+        elif one_card(p1, i) > one_card(p2, i):
             return 1
     return 0
 
 
-def read_games_wins2():
+def read_games_wins():
     results = dict()
     with open('p054_poker.txt', 'r') as file:
         while line := file.readline().replace(" ", "").replace("\n", ""):
@@ -230,8 +216,10 @@ def read_games_wins2():
             elif pair(p1) or pair(p2):
                 results[p_w(p1, p2)] = results.get(p_w(p1, p2), 0) + 1
             else:
-                results[single_v_w(p1, p2)] = results.get(single_v_w(p1, p2), 0) + 1
+                results[s_c_w(p1, p2)] = results.get(s_c_w(p1, p2), 0) + 1
     return results
 
 
-print(read_games_wins2())
+print(read_games_wins())
+
+
